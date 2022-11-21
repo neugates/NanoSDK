@@ -711,11 +711,11 @@ nni_mqtt_msg_set_connect_password(nni_msg *msg, const char *password)
 	    (const uint8_t *) password, (uint32_t) strlen(password));
 }
 
-const char *
+mqtt_buf
 nni_mqtt_msg_get_connect_client_id(nni_msg *msg)
 {
 	nni_mqtt_proto_data *proto_data = nni_msg_get_proto_data(msg);
-	return (const char *) proto_data->payload.connect.client_id.buf;
+	return proto_data->payload.connect.client_id;
 }
 
 const char *
