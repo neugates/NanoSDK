@@ -571,6 +571,15 @@ mqtt_tcptran_pipe_send_cb(void *arg)
 		return;
 	}
 
+	if (p->closed) {
+		while ((aio = nni_list_first(&p->sendq)) != NULL) {
+			nni_list_remove(&p->sendq, aio);
+			nni_aio_finish_error(aio, SERVER_SHUTTING_DOWN);
+		}
+		nni_mtx_unlock(&p->mtx);
+		return;
+	}
+
 	n = nni_aio_count(txaio);
 	nni_aio_iov_advance(txaio, n);
 	if (nni_aio_iov_count(txaio) > 0) {
@@ -612,6 +621,15 @@ mqtt_tcptran_pipe_recv_cb(void *arg)
 	if ((rv = nni_aio_result(rxaio)) != 0) {
 		rv = SERVER_UNAVAILABLE;
 		goto recv_error;
+	}
+
+	if (p->closed) {
+		while ((aio = nni_list_first(&p->recvq)) != NULL) {
+			nni_list_remove(&p->recvq, aio);
+			nni_aio_finish_error(aio, NNG_ECLOSED);
+		}
+		nni_mtx_unlock(&p->mtx);
+		return;
 	}
 
 	n = nni_aio_count(rxaio);
