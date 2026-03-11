@@ -148,8 +148,8 @@ extern "C" {
 // NNG_MAX_RECV_LMQ and NNG_MAX_SEND_LMQ define the length of waiting queue
 // they are the length of nni_lmq, please be ware it affects the memory usage
 // significantly while having heavy throughput
-#define NNG_MAX_RECV_LMQ 256
-#define NNG_MAX_SEND_LMQ 256
+#define NNG_MAX_RECV_LMQ 2048
+#define NNG_MAX_SEND_LMQ 2048
 #define NNG_TRAN_MAX_LMQ_SIZE 128
 
 // NNG_TLS_xxx options can be set on the client as well.
@@ -416,7 +416,7 @@ NNG_DECL const char *nng_mqtt_msg_get_connect_password(nng_msg *);
 NNG_DECL bool        nng_mqtt_msg_get_connect_clean_session(nng_msg *);
 NNG_DECL uint8_t     nng_mqtt_msg_get_connect_proto_version(nng_msg *);
 NNG_DECL uint16_t    nng_mqtt_msg_get_connect_keep_alive(nng_msg *);
-NNG_DECL const char *nng_mqtt_msg_get_connect_client_id(nng_msg *);
+NNG_DECL mqtt_buf    nng_mqtt_msg_get_connect_client_id(nng_msg *);
 NNG_DECL const char *nng_mqtt_msg_get_connect_will_topic(nng_msg *);
 NNG_DECL uint8_t *nng_mqtt_msg_get_connect_will_msg(nng_msg *, uint32_t *);
 NNG_DECL bool     nng_mqtt_msg_get_connect_will_retain(nng_msg *);
